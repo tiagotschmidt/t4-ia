@@ -12,23 +12,85 @@ from .minimax import minimax_move
 
 
 def make_move(state: GameState) -> Tuple[int, int]:
-    """
-    Retorna uma jogada calculada pelo algoritmo minimax para o estado de jogo fornecido.
-    :param state: estado para fazer a jogada
-    :return: tupla (int, int) com as coordenadas x, y da jogada (lembre-se: 0 é a primeira linha/coluna)
-    """
+   """
+   Calculates the best move using the minimax algorithm with alpha-beta pruning.
 
-    # o codigo abaixo apenas retorna um movimento aleatorio valido para
-    # a primeira jogada do Jogo da Tic-Tac-Toe Misere
-    # Remova-o e coloque uma chamada para o minimax_move com 
-    # a sua implementacao da poda alpha-beta. Use profundidade ilimitada na sua entrega,
-    # uma vez que o jogo tem profundidade maxima 9. 
-    # Preencha a funcao utility com o valor de um estado terminal e passe-a como funcao de avaliação para seu minimax_move
+   Args:
+       state: The current game state.
 
-    return random.choice(range(3)), random.choice(range(3))
+   Returns:
+       A tuple (x, y) representing the coordinates of the best move.
+   """
 
-def utility(state, player:str) -> float:
-    """
-    Retorna a utilidade de um estado (terminal) 
-    """
-    return 0   # substitua pelo seu codigo
+   # Assuming a reasonable default maximum depth and a provided evaluation function
+   max_depth = float('+inf')  # Adjust based on game complexity and performance needs
+
+   best_move = minimax_move(state, max_depth, utility)
+   return best_move
+
+
+def utility(state, player):
+    b = state.get_board().board
+    for row in range(3) :      
+        if (b[row][0] == b[row][1] and b[row][1] == b[row][2]) :         
+            if (b[row][0] == player) : 
+                return 10
+            else: 
+                return -10
+  
+    # Checking for Columns for X or O victory.  
+    for col in range(3) : 
+       
+        if (b[0][col] == b[1][col] and b[1][col] == b[2][col]) : 
+          
+            if (b[0][col] == player) :  
+                return 10
+            else: 
+                return -10
+  
+    # Checking for Diagonals for X or O victory.  
+    if (b[0][0] == b[1][1] and b[1][1] == b[2][2]) : 
+      
+        if (b[0][0] == player) : 
+            return 10
+        else: 
+            return -10
+  
+    if (b[0][2] == b[1][1] and b[1][1] == b[2][0]) : 
+      
+        if (b[0][2] == player) : 
+            return 10
+        else: 
+            return -10
+  
+    # Else if none of them have won then return 0  
+    return 0
+
+def check_winner(state):
+ """
+ Checks if there is a winner in the given tic tac toe state.
+
+ Args:
+   state: A list of 9 characters representing the tic tac toe board.
+
+ Returns:
+   The winning player ('X' or 'O'), or None if there is no winner.
+ """
+ board = state.get_board().board
+ #print(board)
+ winning_lines = [
+   [0, 1, 2],
+   [3, 4, 5],
+   [6, 7, 8],
+   [0, 3, 6],
+   [1, 4, 7],
+   [2, 5, 8],
+   [0, 4, 8],
+   [2, 4, 6],
+ ]
+
+ simple_board = [item for sublist in board for item in sublist]
+ for line in winning_lines:
+   if simple_board[line[0]] == simple_board[line[1]] == simple_board[line[2]] != '-':
+     return simple_board[line[0]]
+ return None
