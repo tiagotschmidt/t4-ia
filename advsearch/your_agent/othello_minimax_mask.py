@@ -3,6 +3,7 @@ from typing import Tuple
 from ..othello.gamestate import GameState
 from ..othello.board import Board
 from .minimax import minimax_move
+from typing import Tuple, Callable
 
 # Voce pode criar funcoes auxiliares neste arquivo
 # e tambem modulos auxiliares neste pacote.
@@ -24,6 +25,43 @@ EVAL_TEMPLATE = [
     [100, -30, 6, 2, 2, 6, -30, 100]
 ]
 
+def minimax_max(state, alpha, beta, depth, eval_func: Callable):    
+    if depth == 0 or state.is_terminal():            
+            return eval_func(state, state.player),None
+    current_value = float('-inf')
+    current_action = None
+
+    legal_moves = state.legal_moves()
+    next_states = [(state.next_state(move),move) for move in legal_moves]
+    print(legal_moves,depth)
+    for next_state,move in next_states:
+        new_value, _ = minimax_min(next_state,alpha,beta,depth-1,eval_func)
+        if new_value > current_value:            
+            current_value = new_value
+            current_action = move
+            alpha = max(alpha,current_value)
+            if(alpha >= beta):
+                break    
+    return current_value,current_action
+
+def minimax_min(state, alpha, beta, depth, eval_func: Callable):
+    if depth == 0 or state.is_terminal():            
+            return eval_func(state,state.player),None
+    current_value = float('inf')
+    current_action = None
+
+    legal_moves = state.legal_moves()
+    next_states = [(state.next_state(move),move) for move in legal_moves]
+    print(legal_moves,depth)
+    for next_state,move in next_states:
+        new_value, _ = minimax_max(next_state,alpha,beta,depth-1,eval_func)
+        if new_value < current_value:
+            current_value = new_value
+            current_action = move
+            beta = min(beta,current_value)
+            if(beta <= alpha):
+                break
+    return current_value,current_action
 
 def make_move(state) -> Tuple[int, int]:
     """
@@ -39,14 +77,36 @@ def make_move(state) -> Tuple[int, int]:
 
     return random.choice([(2, 3), (4, 5), (5, 4), (3, 2)])
 
+def evaluate_mask(state, player: str) -> float:
+    """
+    Evaluates an othello state from the point of view of the given player.
 
-def evaluate_mask(state, player:str) -> float:
+    Args:
+        state: instance of GameState representing the current board state.
+        player: player to evaluate the state for (B or W).
+
+    Returns:
+        float: Estimate of the value of the state for the given player.
     """
-    Evaluates an othello state from the point of view of the given player. 
-    If the state is terminal, returns its utility. 
-    If non-terminal, returns an estimate of its value based on the positional value of the pieces.
-    You must use the EVAL_TEMPLATE above to compute the positional value of the pieces.
-    :param state: state to evaluate (instance of GameState)
-    :param player: player to evaluate the state for (B or W)
-    """
-    return 0   # substitua pelo seu codigo
+
+    # Initialize score to 0
+    score = 0
+
+    # Loop through each cell in the board
+    for row in range(8):
+        for col in range(8):
+            # Check if the cell has a piece
+            if state.board[row][col] != ".":
+                # Get the player of the piece on the cell
+                piece_player = state.board[row][col]
+
+                # Check if the piece belongs to the player we are evaluating for
+                if piece_player == player:
+                    # Add the corresponding value from the EVAL_TEMPLATE based on the position
+                    score += EVAL_TEMPLATE[row][col]
+                else:
+                    # Subtract the corresponding value for the opponent's piece
+                    score -= EVAL_TEMPLATE[row][col]
+
+    return score
+

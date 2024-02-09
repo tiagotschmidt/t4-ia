@@ -31,40 +31,16 @@ def make_move(state: GameState) -> Tuple[int, int]:
 
 def utility(state, player):
     b = state.get_board().board
-    for row in range(3) :      
-        if (b[row][0] == b[row][1] and b[row][1] == b[row][2]) :         
-            if (b[row][0] == player) : 
-                return 10
-            else: 
-                return -10
-  
-    # Checking for Columns for X or O victory.  
-    for col in range(3) : 
-       
-        if (b[0][col] == b[1][col] and b[1][col] == b[2][col]) : 
-          
-            if (b[0][col] == player) :  
-                return 10
-            else: 
-                return -10
-  
-    # Checking for Diagonals for X or O victory.  
-    if (b[0][0] == b[1][1] and b[1][1] == b[2][2]) : 
-      
-        if (b[0][0] == player) : 
+    if(state.is_terminal()):
+        current_winner = state.winner()
+        if(current_winner == None):
+            return 0
+        elif(player == current_winner):
             return 10
-        else: 
-            return -10
-  
-    if (b[0][2] == b[1][1] and b[1][1] == b[2][0]) : 
-      
-        if (b[0][2] == player) : 
-            return 10
-        else: 
-            return -10
-  
-    # Else if none of them have won then return 0  
-    return 0
+        else:
+            return -10  
+    else:
+        return 0
 
 def check_winner(state):
  """
@@ -77,7 +53,6 @@ def check_winner(state):
    The winning player ('X' or 'O'), or None if there is no winner.
  """
  board = state.get_board().board
- #print(board)
  winning_lines = [
    [0, 1, 2],
    [3, 4, 5],
