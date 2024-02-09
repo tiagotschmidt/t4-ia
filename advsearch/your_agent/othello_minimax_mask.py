@@ -17,51 +17,54 @@ from typing import Tuple, Callable
 EVAL_TEMPLATE = [
     [100, -30, 6, 2, 2, 6, -30, 100],
     [-30, -50, 1, 1, 1, 1, -50, -30],
-    [  6,   1, 1, 1, 1, 1,   1,   6],
-    [  2,   1, 1, 3, 3, 1,   1,   2],
-    [  2,   1, 1, 3, 3, 1,   1,   2],
-    [  6,   1, 1, 1, 1, 1,   1,   6],
+    [6, 1, 1, 1, 1, 1, 1, 6],
+    [2, 1, 1, 3, 3, 1, 1, 2],
+    [2, 1, 1, 3, 3, 1, 1, 2],
+    [6, 1, 1, 1, 1, 1, 1, 6],
     [-30, -50, 1, 1, 1, 1, -50, -30],
     [100, -30, 6, 2, 2, 6, -30, 100]
 ]
 
-def minimax_max(state, alpha, beta, depth, eval_func: Callable):    
-    if depth == 0 or state.is_terminal():            
-            return eval_func(state, state.player),None
+
+def minimax_max(state, alpha, beta, depth, eval_func: Callable):
+    if depth == 0 or state.is_terminal():
+        return eval_func(state, state.player), None
     current_value = float('-inf')
     current_action = None
 
     legal_moves = state.legal_moves()
-    next_states = [(state.next_state(move),move) for move in legal_moves]
-    print(legal_moves,depth)
-    for next_state,move in next_states:
-        new_value, _ = minimax_min(next_state,alpha,beta,depth-1,eval_func)
-        if new_value > current_value:            
+    next_states = [(state.next_state(move), move) for move in legal_moves]
+    print(legal_moves, depth)
+    for next_state, move in next_states:
+        new_value, _ = minimax_min(next_state, alpha, beta, depth - 1, eval_func)
+        if new_value > current_value:
             current_value = new_value
             current_action = move
-            alpha = max(alpha,current_value)
-            if(alpha >= beta):
-                break    
-    return current_value,current_action
+            alpha = max(alpha, current_value)
+            if (alpha >= beta):
+                break
+    return current_value, current_action
+
 
 def minimax_min(state, alpha, beta, depth, eval_func: Callable):
-    if depth == 0 or state.is_terminal():            
-            return eval_func(state,state.player),None
+    if depth == 0 or state.is_terminal():
+        return eval_func(state, state.player), None
     current_value = float('inf')
     current_action = None
 
     legal_moves = state.legal_moves()
-    next_states = [(state.next_state(move),move) for move in legal_moves]
-    print(legal_moves,depth)
-    for next_state,move in next_states:
-        new_value, _ = minimax_max(next_state,alpha,beta,depth-1,eval_func)
+    next_states = [(state.next_state(move), move) for move in legal_moves]
+    print(legal_moves, depth)
+    for next_state, move in next_states:
+        new_value, _ = minimax_max(next_state, alpha, beta, depth - 1, eval_func)
         if new_value < current_value:
             current_value = new_value
             current_action = move
-            beta = min(beta,current_value)
-            if(beta <= alpha):
+            beta = min(beta, current_value)
+            if (beta <= alpha):
                 break
-    return current_value,current_action
+    return current_value, current_action
+
 
 def make_move(state) -> Tuple[int, int]:
     """
@@ -76,6 +79,7 @@ def make_move(state) -> Tuple[int, int]:
     # A chamada a minimax_move deve receber sua funcao evaluate como parametro.
 
     return random.choice([(2, 3), (4, 5), (5, 4), (3, 2)])
+
 
 def evaluate_mask(state, player: str) -> float:
     """
@@ -109,4 +113,3 @@ def evaluate_mask(state, player: str) -> float:
                     score -= EVAL_TEMPLATE[row][col]
 
     return score
-

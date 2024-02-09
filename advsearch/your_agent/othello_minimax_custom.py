@@ -5,49 +5,52 @@ from ..othello.board import Board
 from typing import Tuple, Callable
 from .minimax import minimax_move
 
+
 # Voce pode criar funcoes auxiliares neste arquivo
 # e tambem modulos auxiliares neste pacote.
 #
 # Nao esqueca de renomear 'your_agent' com o nome
 # do seu agente.
 
-def minimax_max(state, alpha, beta, depth, eval_func: Callable):    
-    if depth == 0 or state.is_terminal():            
-            return eval_func(state, state.player),None
+def minimax_max(state, alpha, beta, depth, eval_func: Callable):
+    if depth == 0 or state.is_terminal():
+        return eval_func(state, state.player), None
     current_value = float('-inf')
     current_action = None
 
     legal_moves = state.legal_moves()
-    next_states = [(state.next_state(move),move) for move in legal_moves]
-    print(legal_moves,depth)
-    for next_state,move in next_states:
-        new_value, _ = minimax_min(next_state,alpha,beta,depth-1,eval_func)
-        if new_value > current_value:            
+    next_states = [(state.next_state(move), move) for move in legal_moves]
+    print(legal_moves, depth)
+    for next_state, move in next_states:
+        new_value, _ = minimax_min(next_state, alpha, beta, depth - 1, eval_func)
+        if new_value > current_value:
             current_value = new_value
             current_action = move
-            alpha = max(alpha,current_value)
-            if(alpha >= beta):
-                break    
-    return current_value,current_action
+            alpha = max(alpha, current_value)
+            if (alpha >= beta):
+                break
+    return current_value, current_action
+
 
 def minimax_min(state, alpha, beta, depth, eval_func: Callable):
-    if depth == 0 or state.is_terminal():            
-            return eval_func(state,state.player),None
+    if depth == 0 or state.is_terminal():
+        return eval_func(state, state.player), None
     current_value = float('inf')
     current_action = None
 
     legal_moves = state.legal_moves()
-    next_states = [(state.next_state(move),move) for move in legal_moves]
-    print(legal_moves,depth)
-    for next_state,move in next_states:
-        new_value, _ = minimax_max(next_state,alpha,beta,depth-1,eval_func)
+    next_states = [(state.next_state(move), move) for move in legal_moves]
+    print(legal_moves, depth)
+    for next_state, move in next_states:
+        new_value, _ = minimax_max(next_state, alpha, beta, depth - 1, eval_func)
         if new_value < current_value:
             current_value = new_value
             current_action = move
-            beta = min(beta,current_value)
-            if(beta <= alpha):
+            beta = min(beta, current_value)
+            if (beta <= alpha):
                 break
-    return current_value,current_action
+    return current_value, current_action
+
 
 def make_move(state) -> Tuple[int, int]:
     """
@@ -61,7 +64,7 @@ def make_move(state) -> Tuple[int, int]:
     # Remova-o e coloque uma chamada para o minimax_move (que vc implementara' no modulo minimax).
     # A chamada a minimax_move deve receber sua funcao evaluate como parametro.
 
-    _, best_move = minimax_max(state, float('-inf'), float('inf'), max_depth,evaluate_custom)
+    _, best_move = minimax_max(state, float('-inf'), float('inf'), max_depth, evaluate_custom)
     return best_move
 
 
@@ -104,7 +107,7 @@ def evaluate_custom(state: "GameState", player: str) -> float:
     opponent_capturable = state.estimate_capturable_pieces(opponent(player))
 
     # Normalize piece counts using the maximum possible
-    max_pieces = state.get_board_size()**2
+    max_pieces = state.get_board_size() ** 2
     player_piece_score = player_count / max_pieces
     opponent_piece_score = opponent_count / max_pieces
 
@@ -123,6 +126,7 @@ def evaluate_custom(state: "GameState", player: str) -> float:
         final_score *= 1.1  # Adjust weights for larger boards
 
     return final_score
+
 
 def corner_bonus(state: "GameState", player: str) -> float:
     """
@@ -147,4 +151,4 @@ def corner_bonus(state: "GameState", player: str) -> float:
     elif corner_count == 2:
         return 0.1  # Slight advantage for owning 2 corners
     elif corner_count == 0:
-        return -0.1  
+        return -0.1

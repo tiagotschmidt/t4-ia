@@ -13,7 +13,7 @@ def make_move(state: 'GameState') -> 'Tuple[int, int]':
     except ValueError:
         ok = False
     x, y = int(x), int(y)
-    while not ok or not (x,y) in state.legal_moves():
+    while not ok or not (x, y) in state.legal_moves():
         move = input("Sua jogada foi ilegal, tente outra vez: ")
 
         try:

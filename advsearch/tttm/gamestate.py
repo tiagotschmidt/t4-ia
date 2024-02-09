@@ -1,8 +1,8 @@
 from typing import Tuple, Union
 from .board import Board
 
-class GameState:
 
+class GameState:
     game_name = "Tic-Tac-Toe Misere"
 
     def __init__(self, board: Board, player: str):
@@ -46,7 +46,7 @@ class GameState:
     def next_state(self, move: Tuple[int, int]) -> 'GameState':
         if not self.is_legal_move(move):
             raise ValueError("Invalid move.")
-        
+
         new_state = self.copy()
         col, row = move
         new_state.board.place_marker(self.player, row, col)

@@ -1,6 +1,7 @@
 from typing import Tuple, Union
 from .board import Board
 
+
 class GameState(object):
     """
     The game state is simply the board 
@@ -11,7 +12,7 @@ class GameState(object):
 
     game_name = "Othello"
 
-    def __init__(self, board:Board, player:str) -> None:
+    def __init__(self, board: Board, player: str) -> None:
         """
         Initializes the Game state with the given board and player to move.
         You can access the attributes self.board and self.player directly for convenience.
@@ -28,7 +29,7 @@ class GameState(object):
         """
         return self.board.is_terminal_state()
 
-    def is_legal_move(self, move:Tuple[int,int]) -> bool:
+    def is_legal_move(self, move: Tuple[int, int]) -> bool:
         """
         Returns whether the given move is legal in this state
         """
@@ -40,7 +41,7 @@ class GameState(object):
         """
         return self.board.legal_moves(self.player)
 
-    def winner(self) -> Union[str,None]:
+    def winner(self) -> Union[str, None]:
         """
         Returns the string representation of the winner of the game
         (if this is a terminal state)
@@ -58,8 +59,8 @@ class GameState(object):
         Returns a copy of this state
         """
         return GameState(self.board.copy(), self.player)
-    
-    def next_state(self, move:Tuple[int,int]) -> 'GameState':
+
+    def next_state(self, move: Tuple[int, int]) -> 'GameState':
         """
         Returns the next state given the move.
         The next state is created as a new object
@@ -71,7 +72,7 @@ class GameState(object):
             raise ValueError("Invalid move: %s" % str(move))
 
         opponent = Board.opponent(self.player)
-        
+
         # alternates the player, but checkes if it has valid moves
         # also, if neither the opponent nor the player have
         # valid moves, then the next player is None

@@ -10,6 +10,7 @@ class FunctionTimer(object):
     n = FunctionTimer(foo, (5,3))
     print n.run(10)
     """
+
     def __init__(self, function, args):
         self.function = function
         self.args = args
@@ -23,4 +24,3 @@ class FunctionTimer(object):
         thread.start()
         thread.join(timeout)
         return self.answer
-

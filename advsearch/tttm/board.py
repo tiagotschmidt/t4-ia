@@ -1,11 +1,11 @@
 from typing import Tuple, Union
 
+
 class Board:
     """
     A board implementation for the tic-tac-toe misere game
     """
 
-    
     BLACK = 'B'
     WHITE = 'W'
     EMPTY = '.'
@@ -31,20 +31,20 @@ class Board:
 
     def __str__(self):
         return '\n'.join([' '.join(row) for row in self.board])
-    
+
     def decorated_str(self, colors=False, move=None, highlight_flipped=False) -> str:
         # Create a decorated board with coordinates outside the main board
         decorated_board = [[' ' for _ in range(7)] for _ in range(7)]
-        
+
         # Add column coordinates
         for col in range(3):
-            decorated_board[0][col*2 + 2] = str(col)
+            decorated_board[0][col * 2 + 2] = str(col)
 
         for row in range(3):
             # Add row coordinate
-            decorated_board[row*2 + 2][0] = str(row)
+            decorated_board[row * 2 + 2][0] = str(row)
             for col in range(3):
-                decorated_board[row*2 + 2][col*2 + 2] = self.board[row][col]
+                decorated_board[row * 2 + 2][col * 2 + 2] = self.board[row][col]
 
         # Format the decorated board as a string
         return '\n'.join([' '.join(row) for row in decorated_board])
@@ -80,7 +80,7 @@ class Board:
             return self.board[0][2]
 
         return None
-    
+
     def copy(self):
         new_board = Board()
         new_board.board = [row[:] for row in self.board]

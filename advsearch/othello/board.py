@@ -238,7 +238,7 @@ class Board(object):
 
         if self.is_legal(move_xy, color):
             # places the piece and update piece counts
-            x, y = move_xy  
+            x, y = move_xy
             move_yx = y, x  # move is received in x,y but tiles are indexded by y,x
 
             self.tiles[y][x] = color
@@ -283,7 +283,7 @@ class Board(object):
             self.piece_count[opp] -= 1
             nx, ny = nx + dx, ny + dy
 
-    def legal_moves(self, color:str) -> set:
+    def legal_moves(self, color: str) -> set:
         """
         Returns a set of legal moves for the given color
         :param color:str
@@ -298,7 +298,7 @@ class Board(object):
                 self.find_legal_moves_dense(color)
             else:
                 self.find_legal_moves_sparse(color)
-               
+
         return self._legal_moves[color]
 
     def find_legal_moves_dense(self, color):
@@ -316,7 +316,7 @@ class Board(object):
                 for direc in self.DIRECTIONS:
                     if self.find_bracket((x, y), color, direc):
                         # flips x,y because of the way tiles are stored and the x,y coords in real world
-                        self._legal_moves[color].add((y,x))
+                        self._legal_moves[color].add((y, x))
                         break
 
     def find_legal_moves_sparse(self, color):
@@ -414,11 +414,12 @@ class Board(object):
                             string += f'*{piece}'
                             if j == 7:
                                 string += '*'  # adds sign to the right of boundary piece
-                        elif (i, j-1) == move or (i, j-1) in self.flipped:  # shows sign at the piece to the right of the highlighted one
+                        elif (i, j - 1) == move or (
+                        i, j - 1) in self.flipped:  # shows sign at the piece to the right of the highlighted one
                             string += f'*{piece}'
                         else:
                             string += f' {piece}'
-                    string += '\n'          
+                    string += '\n'
         return string
 
     def __str__(self):
